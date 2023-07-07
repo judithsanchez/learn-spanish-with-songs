@@ -31,16 +31,19 @@ function App() {
 
             return (
               <p
-                // className={`token ${
-                //   token.isPunctuationSign ? 'punctuationSign' : 'word'
-                // }`}
                 className={`token ${
                   token.isPunctuationSign ? 'punctuationSign' : 'word'
                 } ${
                   !token.isPunctuationSign && !nextToken?.isPunctuationSign
                     ? 'separator'
                     : ''
-                }`}
+                } ${
+                  token.isPunctuationSign && nextToken?.isPunctuationSign
+                    ? 'separator'
+                    : ''
+                }
+                ${token.token === ',' ? 'separator' : ''}
+                  `}
                 id={`token${tokenIndex}`}
                 key={tokenIndex}
               >

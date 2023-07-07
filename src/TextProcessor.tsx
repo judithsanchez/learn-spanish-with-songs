@@ -50,7 +50,6 @@ export default class TextProcessor {
     '"',
   ]);
 
-  // private processedText: Sentence[];
   processedText: Sentence[];
 
   constructor(text: string) {
@@ -77,13 +76,11 @@ export default class TextProcessor {
   }
 
   private tokenizeSentences(text: string): string[] | null {
-    // console.log(text.split(/(?<=\.|\?)\s*/));
     return text.split(/(?<=\.|\?)\s*/);
   }
 
   private tokenizeSentence(sentence: string): Token[] {
     const words = sentence.split(' ');
-    // console.log(words);
     const tokenizedSentence: Token[] = [];
     let id = 0;
 
@@ -107,7 +104,6 @@ export default class TextProcessor {
         id++;
       }
     }
-    // console.log(tokenizedSentence);
     return tokenizedSentence;
   }
 
@@ -116,7 +112,6 @@ export default class TextProcessor {
     let currentToken = '';
 
     for (const char of word) {
-      // console.log(word);
       if (this.isPunctuation(char)) {
         if (currentToken.length > 0) {
           tokenizedWord.push(currentToken);
@@ -127,7 +122,6 @@ export default class TextProcessor {
         currentToken += char;
       }
     }
-    // console.log(currentToken);
 
     if (currentToken.length > 0) {
       tokenizedWord.push(currentToken);
@@ -140,6 +134,3 @@ export default class TextProcessor {
     return this.punctuationSigns.has(char);
   }
 }
-
-// If the token is a word and it is followed by another work, add the className "separator"
-// If the token is a punctuation sign and it is followed by another punctuation sign, add the className "separator"
