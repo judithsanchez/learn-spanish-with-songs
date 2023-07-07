@@ -1,5 +1,5 @@
 interface Token {
-  tokenId: number;
+  id: number;
   token: string;
   isPunctuationSign: boolean;
   languages?: {
@@ -9,7 +9,7 @@ interface Token {
 }
 
 interface Sentence {
-  sentenceId: number;
+  id: number;
   tokens: Token[];
 }
 
@@ -50,7 +50,8 @@ export default class TextProcessor {
     '"',
   ]);
 
-  private processedText: Sentence[];
+  // private processedText: Sentence[];
+  processedText: Sentence[];
 
   constructor(text: string) {
     if (typeof text !== 'string') {
@@ -69,20 +70,22 @@ export default class TextProcessor {
   private processText(text: string): Sentence[] {
     const sentences = this.tokenizeSentences(text);
     const result = sentences.map((sentence, index) => ({
-      sentenceId: index,
+      id: index,
       tokens: this.tokenizeSentence(sentence),
     }));
     return result;
   }
 
-  private tokenizeSentences(text: string): string[] {
-    return text.split(/(?<=\.)\s*/);
+  private tokenizeSentences(text: string): string[] | null {
+    // console.log(text.split(/(?<=\.|\?)\s*/));
+    return text.split(/(?<=\.|\?)\s*/);
   }
 
   private tokenizeSentence(sentence: string): Token[] {
     const words = sentence.split(' ');
+    // console.log(words);
     const tokenizedSentence: Token[] = [];
-    let tokenId = 0;
+    let id = 0;
 
     for (const word of words) {
       const tokens = this.tokenizeWord(word);
@@ -91,7 +94,7 @@ export default class TextProcessor {
         const isPunctuationSign = this.isPunctuation(token);
 
         const tokenObject: Token = {
-          tokenId,
+          id,
           token,
           isPunctuationSign,
         };
@@ -101,10 +104,10 @@ export default class TextProcessor {
         }
 
         tokenizedSentence.push(tokenObject);
-        tokenId++;
+        id++;
       }
     }
-
+    // console.log(tokenizedSentence);
     return tokenizedSentence;
   }
 
@@ -113,6 +116,7 @@ export default class TextProcessor {
     let currentToken = '';
 
     for (const char of word) {
+      // console.log(word);
       if (this.isPunctuation(char)) {
         if (currentToken.length > 0) {
           tokenizedWord.push(currentToken);
@@ -123,6 +127,7 @@ export default class TextProcessor {
         currentToken += char;
       }
     }
+    console.log(currentToken);
 
     if (currentToken.length > 0) {
       tokenizedWord.push(currentToken);
@@ -135,3 +140,6 @@ export default class TextProcessor {
     return this.punctuationSigns.has(char);
   }
 }
+
+// If the token is a word and it is followed by another work, add the className "separator"
+// If the token is a punctuation sign and it is followed by another punctuation sign, add the className "separator"

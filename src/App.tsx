@@ -1,41 +1,65 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 import TextProcessor from './TextProcessor';
+import songs from './songs.json';
 
 function App() {
-  const sampleText =
-    'Hola, ¿cómo estás? - Yo estoy muy bien. Espero que tú también.';
-  const example = new TextProcessor(sampleText);
+  const [processedText, setProcessedText] = useState(
+    new TextProcessor(songs[0].lyrics).processedText
+  );
 
-  console.log(example);
-
-  const [count, setCount] = useState(0);
+  // console.log(processedText);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="lyrics">
+      {processedText.map((sentence, sentenceIndex) => (
+        <div
+          className="sentence-container"
+          id={`sentence${sentenceIndex}`}
+          key={sentenceIndex}
+        >
+          {sentence.tokens.map((token, tokenIndex) => {
+            // {
+            //   console.log('first', token.token, token.isPunctuationSign);
+            // }
+            // {
+            //   console.log(
+            //     'second',
+            //     sentence.tokens[tokenIndex + 1].token,
+            //     sentence.tokens[tokenIndex + 1].isPunctuationSign
+            //   );
+            // }
+            // {
+            //   if (tokenIndex === sentence.tokens.length - 1) {
+            //     return;
+            //   } else {
+            //     console.log(
+            //       'second',
+            //       sentence.tokens[tokenIndex + 1].token,
+            //       sentence.tokens[tokenIndex + 1].isPunctuationSign
+            //     );
+            //   }
+            // }
+
+            const nextToken = sentence.tokens[tokenIndex + 1];
+            const isNextTokenPunctuation =
+              nextToken && nextToken.isPunctuationSign;
+
+            return (
+              <p
+                className={`token ${
+                  token.isPunctuationSign ? 'punctuationSign' : 'word'
+                }`}
+                id={`token${tokenIndex}`}
+                key={tokenIndex}
+              >
+                {token.token}
+              </p>
+            );
+          })}
+        </div>
+      ))}
+    </div>
   );
 }
 
