@@ -8,8 +8,6 @@ function App() {
     new TextProcessor(songs[0].lyrics).processedText
   );
 
-  // console.log(processedText);
-
   return (
     <div className="lyrics">
       {processedText.map((sentence, sentenceIndex) => (
@@ -19,36 +17,29 @@ function App() {
           key={sentenceIndex}
         >
           {sentence.tokens.map((token, tokenIndex) => {
-            // {
-            //   console.log('first', token.token, token.isPunctuationSign);
-            // }
-            // {
-            //   console.log(
-            //     'second',
-            //     sentence.tokens[tokenIndex + 1].token,
-            //     sentence.tokens[tokenIndex + 1].isPunctuationSign
-            //   );
-            // }
-            // {
-            //   if (tokenIndex === sentence.tokens.length - 1) {
-            //     return;
-            //   } else {
-            //     console.log(
-            //       'second',
-            //       sentence.tokens[tokenIndex + 1].token,
-            //       sentence.tokens[tokenIndex + 1].isPunctuationSign
-            //     );
-            //   }
-            // }
+            let currentToken;
+            let nextToken;
 
-            const nextToken = sentence.tokens[tokenIndex + 1];
-            const isNextTokenPunctuation =
-              nextToken && nextToken.isPunctuationSign;
+            {
+              if (tokenIndex !== sentence.tokens.length - 1) {
+                currentToken = token;
+                nextToken = sentence.tokens[tokenIndex + 1];
+                console.log(currentToken.token, currentToken.isPunctuationSign);
+                console.log(nextToken.token, nextToken.isPunctuationSign);
+              }
+            }
 
             return (
               <p
+                // className={`token ${
+                //   token.isPunctuationSign ? 'punctuationSign' : 'word'
+                // }`}
                 className={`token ${
                   token.isPunctuationSign ? 'punctuationSign' : 'word'
+                } ${
+                  !token.isPunctuationSign && !nextToken?.isPunctuationSign
+                    ? 'separator'
+                    : ''
                 }`}
                 id={`token${tokenIndex}`}
                 key={tokenIndex}

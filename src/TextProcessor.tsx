@@ -127,7 +127,7 @@ export default class TextProcessor {
         currentToken += char;
       }
     }
-    console.log(currentToken);
+    // console.log(currentToken);
 
     if (currentToken.length > 0) {
       tokenizedWord.push(currentToken);
