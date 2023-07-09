@@ -4,7 +4,7 @@ import TextProcessor from './TextProcessor';
 import songs from './songs.json';
 
 function App() {
-  const [processedText, setProcessedText] = useState(
+  const [processedText] = useState(
     new TextProcessor(songs[0].lyrics).processedText
   );
 
@@ -16,41 +16,47 @@ function App() {
           id={`sentence${sentenceIndex}`}
           key={sentenceIndex}
         >
-          {sentence.tokens.map((token, tokenIndex) => {
-            let currentToken;
-            let nextToken;
+          <div className="translation-button-container">
+            <button>T</button>
+          </div>
 
-            {
-              if (tokenIndex !== sentence.tokens.length - 1) {
-                currentToken = token;
-                nextToken = sentence.tokens[tokenIndex + 1];
-                console.log(currentToken.token, currentToken.isPunctuationSign);
-                console.log(nextToken.token, nextToken.isPunctuationSign);
-              }
-            }
+          <div className="tokens-container">
+            {sentence.tokens.map((token, tokenIndex) => {
+              let currentToken;
+              let nextToken;
 
-            return (
-              <p
-                className={`token ${
-                  token.isPunctuationSign ? 'punctuationSign' : 'word'
-                } ${
-                  !token.isPunctuationSign && !nextToken?.isPunctuationSign
-                    ? 'separator'
-                    : ''
-                } ${
-                  token.isPunctuationSign && nextToken?.isPunctuationSign
-                    ? 'separator'
-                    : ''
+              {
+                if (tokenIndex !== sentence.tokens.length - 1) {
+                  currentToken = token;
+                  nextToken = sentence.tokens[tokenIndex + 1];
                 }
+              }
+
+              return (
+                <>
+                  <p
+                    className={`token ${
+                      token.isPunctuationSign ? 'punctuationSign' : 'word'
+                    } ${
+                      !token.isPunctuationSign && !nextToken?.isPunctuationSign
+                        ? 'separator'
+                        : ''
+                    } ${
+                      token.isPunctuationSign && nextToken?.isPunctuationSign
+                        ? 'separator'
+                        : ''
+                    }
                 ${token.token === ',' ? 'separator' : ''}
                   `}
-                id={`token${tokenIndex}`}
-                key={tokenIndex}
-              >
-                {token.token}
-              </p>
-            );
-          })}
+                    id={`token${tokenIndex}`}
+                    key={tokenIndex}
+                  >
+                    {token.token}
+                  </p>
+                </>
+              );
+            })}
+          </div>
         </div>
       ))}
     </div>

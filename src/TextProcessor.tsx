@@ -1,16 +1,19 @@
+interface Languages {
+  spanish: string;
+  english: string;
+}
+
 interface Token {
   id: number;
   token: string;
   isPunctuationSign: boolean;
-  languages?: {
-    spanish: string;
-    english: string;
-  };
+  languages?: Languages;
 }
 
 interface Sentence {
   id: number;
   tokens: Token[];
+  languages?: Languages;
 }
 
 export default class TextProcessor {
@@ -68,9 +71,14 @@ export default class TextProcessor {
 
   private processText(text: string): Sentence[] {
     const sentences = this.tokenizeSentences(text);
+    if (sentences === null) {
+      throw new Error('No valid sentences found in the input text.');
+    }
+
     const result = sentences.map((sentence, index) => ({
       id: index,
       tokens: this.tokenizeSentence(sentence),
+      languages: { spanish: sentence, english: '' },
     }));
     return result;
   }
@@ -95,10 +103,6 @@ export default class TextProcessor {
           token,
           isPunctuationSign,
         };
-
-        if (!isPunctuationSign) {
-          tokenObject.languages = { spanish: '', english: '' };
-        }
 
         tokenizedSentence.push(tokenObject);
         id++;
