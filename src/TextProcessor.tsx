@@ -1,63 +1,58 @@
-interface Languages {
-  spanish: string;
-  english: string;
-}
-
 interface Token {
   id: number;
   token: string;
   isPunctuationSign: boolean;
-  languages?: Languages;
 }
 
 interface Sentence {
   id: number;
   tokens: Token[];
-  languages?: Languages;
 }
 
-export default class TextProcessor {
-  private punctuationSigns: Set<string> = new Set([
-    ',',
-    '.',
-    '¡',
-    '!',
-    '¿',
-    '?',
-    ':',
-    ';',
-    "'",
-    '(',
-    ')',
-    '-',
-    '_',
-    '[',
-    ']',
-    '{',
-    '}',
-    '/',
-    '\\',
-    '|',
-    '@',
-    '#',
-    '$',
-    '%',
-    '&',
-    '*',
-    '+',
-    '=',
-    '<',
-    '>',
-    '~',
-    '`',
-    '"',
-  ]);
+const punctuationSigns: Set<string> = new Set([
+  ',',
+  '.',
+  '¡',
+  '!',
+  '¿',
+  '?',
+  ':',
+  ';',
+  "'",
+  '(',
+  ')',
+  '-',
+  '_',
+  '[',
+  ']',
+  '{',
+  '}',
+  '/',
+  '\\',
+  '|',
+  '@',
+  '#',
+  '$',
+  '%',
+  '&',
+  '*',
+  '+',
+  '=',
+  '<',
+  '>',
+  '~',
+  '`',
+  '"',
+]);
 
+export default class TextProcessor {
   processedText: Sentence[];
 
   constructor(text: string) {
     if (typeof text !== 'string') {
-      throw new Error('TextProcessor can only be initialized with a string.');
+      throw new Error(
+        'text_in_spanish rocessor can only be initialized with a string.'
+      );
     }
 
     if (text.trim().length === 0) {
@@ -78,7 +73,7 @@ export default class TextProcessor {
     const result = sentences.map((sentence, index) => ({
       id: index,
       tokens: this.tokenizeSentence(sentence),
-      languages: { spanish: sentence, english: '' },
+      sentence: sentence,
     }));
     return result;
   }
@@ -135,6 +130,6 @@ export default class TextProcessor {
   }
 
   private isPunctuation(char: string): boolean {
-    return this.punctuationSigns.has(char);
+    return punctuationSigns.has(char);
   }
 }

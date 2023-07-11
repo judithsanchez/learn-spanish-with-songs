@@ -7,10 +7,11 @@
   /* width: 75%; */
 }
 
-.sentence-container {
+.verse-container {
+  background-color: lightblue;
   align-items: center;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   justify-content: space-between;
   margin: 10px 0;
   width: 100%;
