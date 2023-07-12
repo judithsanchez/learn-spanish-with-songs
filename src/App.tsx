@@ -1,70 +1,63 @@
 import { useState } from 'react';
 import './App.css';
 import TextProcessor from './TextProcessor';
+import { Token, Sentence } from './TextProcessor';
 import Song from './Song';
 import songs from './songs.json';
 
-function App() {
+export default function App() {
   const siTeVas = songs[0];
   const spanishSong = new TextProcessor(siTeVas.lyrics.spanish);
   const englishSong = new TextProcessor(siTeVas.lyrics.english);
   const [song] = useState(new Song(spanishSong, englishSong));
 
-  return (
-    <div className="lyrics-container">
-      {song.lyrics.spanish.processedText.map((obj, index) => (
-        <div className="verse-container">
-          <p>{obj.sentence}</p>
-          <p>{song.lyrics.english.processedText[index].sentence}</p>
-        </div>
-      ))}
-    </div>
-  );
+  const renderTokens = (obj: Token) => {
+    return obj.tokens.map((tokenObj: Token, tokenIndex: number) => {
+      const nextToken =
+        tokenIndex !== obj.tokens.length - 1
+          ? obj.tokens[tokenIndex + 1]
+          : null;
+      const isPunctuation = tokenObj.isPunctuationSign;
+      const isNextPunctuation = nextToken && nextToken.isPunctuationSign;
+      const isWord = !isPunctuation && !isNextPunctuation;
+      const isSeparator =
+        isWord ||
+        (isPunctuation && isNextPunctuation) ||
+        tokenObj.token === ',';
+
+      return (
+        <p
+          className={`token ${isPunctuation ? 'punctuationSign' : 'word'} ${
+            isSeparator ? 'separator' : ''
+          }`}
+          id={`token${tokenIndex}`}
+          key={`token${tokenIndex}`}
+        >
+          {tokenObj.token}
+        </p>
+      );
+    });
+  };
+
+  const renderVerse = (obj: Sentence, index: number) => {
+    return (
+      <div className="verse-container" key={`verse${index}`}>
+        <div className="tokens-container">{renderTokens(obj, index)}</div>
+        <p className="verse verseSpanish" id={`verseSpanish${index}`}>
+          {obj.sentence}
+        </p>
+        <p className="verse verseEnglish" id={`verseEnglish${index}`}>
+          {song.lyrics.english.processedText[index].sentence}
+        </p>
+      </div>
+    );
+  };
+
+  const renderVerses = () => {
+    return song.lyrics.spanish.processedText.map((obj: object, index: number) =>
+      renderVerse(obj, index)
+    );
+  };
+
+  return <div className="lyrics-container">{renderVerses()}</div>;
 }
-
-export default App;
-
-// {
-//   processedText.map((sentence, sentenceIndex) => {
-//     const { tokens } = sentence;
-//     const tokenCount = tokens.length;
-
-//     return (
-//       <div
-//         className="sentence-container"
-//         id={`sentence${sentenceIndex}`}
-//         key={sentenceIndex}
-//       >
-//         <div className="translation-button-container">
-//           <button>T</button>
-//         </div>
-
-//         <div className="tokens-container">
-//           {tokens.map((token, tokenIndex) => {
-//             const nextToken =
-//               tokenIndex !== tokenCount - 1 ? tokens[tokenIndex + 1] : null;
-//             const isPunctuation = token.isPunctuationSign;
-//             const isNextPunctuation = nextToken && nextToken.isPunctuationSign;
-//             const isWord = !isPunctuation && !isNextPunctuation;
-//             const isSeparator =
-//               isWord ||
-//               (isPunctuation && isNextPunctuation) ||
-//               token.token === ',';
-
-//             return (
-//               <p
-//                 className={`token ${
-//                   isPunctuation ? 'punctuationSign' : 'word'
-//                 } ${isSeparator ? 'separator' : ''}`}
-//                 id={`token${tokenIndex}`}
-//                 key={tokenIndex}
-//               >
-//                 {token.token}
-//               </p>
-//             );
-//           })}
-//         </div>
-//       </div>
-//     );
-//   });
-// }

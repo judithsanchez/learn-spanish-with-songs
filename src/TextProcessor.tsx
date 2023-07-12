@@ -1,12 +1,13 @@
-interface Token {
+export interface Token {
   id: number;
   token: string;
   isPunctuationSign: boolean;
 }
 
-interface Sentence {
+export interface Sentence {
   id: number;
   tokens: Token[];
+  sentence: string;
 }
 
 const punctuationSigns: Set<string> = new Set([
@@ -50,9 +51,7 @@ export default class TextProcessor {
 
   constructor(text: string) {
     if (typeof text !== 'string') {
-      throw new Error(
-        'text_in_spanish rocessor can only be initialized with a string.'
-      );
+      throw new Error('TextProcessor can only be initialized with a string.');
     }
 
     if (text.trim().length === 0) {
