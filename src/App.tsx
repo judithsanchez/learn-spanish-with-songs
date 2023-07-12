@@ -11,7 +11,7 @@ export default function App() {
   const englishSong = new TextProcessor(siTeVas.lyrics.english);
   const [song] = useState(new Song(spanishSong, englishSong));
 
-  const renderTokens = (obj: Token) => {
+  const renderTokens = (obj: Sentence) => {
     return obj.tokens.map((tokenObj: Token, tokenIndex: number) => {
       const nextToken =
         tokenIndex !== obj.tokens.length - 1
@@ -42,7 +42,7 @@ export default function App() {
   const renderVerse = (obj: Sentence, index: number) => {
     return (
       <div className="verse-container" key={`verse${index}`}>
-        <div className="tokens-container">{renderTokens(obj, index)}</div>
+        <div className="tokens-container">{renderTokens(obj)}</div>
         <p className="verse verseSpanish" id={`verseSpanish${index}`}>
           {obj.sentence}
         </p>
@@ -54,8 +54,8 @@ export default function App() {
   };
 
   const renderVerses = () => {
-    return song.lyrics.spanish.processedText.map((obj: object, index: number) =>
-      renderVerse(obj, index)
+    return song.lyrics.spanish.processedText.map(
+      (obj: Sentence, index: number) => renderVerse(obj, index)
     );
   };
 
